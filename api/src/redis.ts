@@ -2,7 +2,6 @@ import Redis from "ioredis";
 import "dotenv/config";
 
 const REDIS_URL = process.env.REDIS_URL || "";
-
 const redis = new Redis(REDIS_URL, {
     tls: {
         rejectUnauthorized: false
@@ -12,7 +11,7 @@ const redis = new Redis(REDIS_URL, {
         return delay;
     },
     maxRetriesPerRequest: 3,
-    enableOfflineQueue: true, // Important for production
+    enableOfflineQueue: true,
 });
 
 redis
