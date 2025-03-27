@@ -1,19 +1,33 @@
-# ./api/Dockerfile
+# Stage 1: Build
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production=false
+
+# Copy source and build
+COPY . .
+RUN yarn build  # Only if your project needs a build step (e.g., TypeScript)
+
+# Stage 2: Runtime
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Install dependencies first for better caching
+# Install production dependencies only
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --production
 
-# Copy source code
-COPY . .
+# Copy built files from builder
+COPY --from=builder /app/dist ./dist  # Adjust if your build outputs elsewhere
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copy other necessary files (like .env, templates, etc.)
+COPY .env .
+COPY public ./public
 
 EXPOSE 3001
 
-# Dev command (with hot-reload if needed)
-CMD ["yarn", "dev"]
-
-# For production:
-# CMD ["yarn", "start"]
+CMD ["yarn", "start"]

@@ -1,6 +1,7 @@
 import axios from "axios";
 import redis from "./redis";
 import {CurrentPrice, HistoryChart, HistoryChartData} from "./dto";
+import "dotenv/config";
 
 const API_URL = process.env.RESOURCE_API_URL || "https://api.coingecko.com/api/v3";
 const CACHE_EXPIRATION = 60;

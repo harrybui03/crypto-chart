@@ -17,7 +17,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REDIS_URL=http://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - NODE_ENV=development
       - RESOURCE_API_URL=https://api.coingecko.com/api/v3
     volumes:
@@ -25,21 +26,6 @@ services:
       - /app/node_modules
     depends_on:
       - redis
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    ports:
-      - "5173:5173"
-    environment:
-      - VITE_API_BASE_URL=http://api:3001
-    volumes:
-      - ./web:/app
-      - /app/node_modules
     networks:
       - app-network
     restart: unless-stopped

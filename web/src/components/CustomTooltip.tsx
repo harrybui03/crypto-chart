@@ -1,5 +1,11 @@
+import { TooltipProps } from 'recharts';
+import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({
+                           active,
+                           payload,
+                           label
+                       }: TooltipProps<ValueType, NameType>) => {
     if (!active || !payload || !payload.length) return null;
 
     return (
@@ -14,8 +20,9 @@ const CustomTooltip = ({ active, payload, label }) => {
                 <br />
                 {new Date(label).toLocaleTimeString()}
             </p>
-            <p>Price: ${payload[0].value.toLocaleString()}</p>
+            <p>Price: ${payload[0].value?.toLocaleString()}</p>
         </div>
     );
 };
+
 export default CustomTooltip;

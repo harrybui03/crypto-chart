@@ -4,7 +4,7 @@ import {Box, CircularProgress, Typography} from "@mui/material";
 
 const CryptoDataWrapper = ({ children }: { children: React.ReactNode }) => {
     const { coin } = usePriceStore();
-    const { data, loading, error } = useCurrentPrice(coin);
+    const { data, loading } = useCurrentPrice(coin);
 
     if (loading) {
         return (
@@ -14,12 +14,11 @@ const CryptoDataWrapper = ({ children }: { children: React.ReactNode }) => {
         );
     }
 
-    if (!coin || error || !data) {
+    if (!coin || !data) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
                 <Typography variant="h6" color="textSecondary">
-                    {!coin ? 'Please select a cryptocurrency' :
-                        error ? 'Error loading data' : 'No data available'}
+                    {!coin ? 'Please select a cryptocurrency' : 'Error loading data'}
                 </Typography>
             </Box>
         );

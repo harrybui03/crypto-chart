@@ -1,17 +1,20 @@
 import Redis from "ioredis";
+import "dotenv/config";
 
-// Configure Redis connection with Docker settings
-const redis = new Redis({
-    host: process.env.REDIS_HOST || "redis", // Matches Docker service name
-    port: parseInt(process.env.REDIS_PORT || "6379"),
+const REDIS_URL = process.env.REDIS_URL || "";
+
+const redis = new Redis(REDIS_URL, {
+    tls: {
+        rejectUnauthorized: false
+    },
     retryStrategy: (times) => {
         const delay = Math.min(times * 50, 2000);
         return delay;
     },
     maxRetriesPerRequest: 3,
+    enableOfflineQueue: true, // Important for production
 });
 
-// Handle connection events
 redis
     .on("connect", () => console.log("Connected to Redis"))
     .on("error", (err) => console.error("Redis error:", err))

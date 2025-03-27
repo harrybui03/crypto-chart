@@ -1,12 +1,12 @@
 import { TextField } from "@mui/material";
 import { usePriceStore } from "../store/usePriceStore";
-import {useState} from "react";
+import {useState , KeyboardEvent } from "react";
 
 const SearchBar = () => {
   const { coin, setCoin } = usePriceStore();
   const [inputValue, setInputValue] = useState(coin);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       setCoin(inputValue);
     }
