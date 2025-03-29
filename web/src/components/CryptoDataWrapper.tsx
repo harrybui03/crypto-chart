@@ -1,28 +1,21 @@
-import {usePriceStore} from "../store/usePriceStore.ts";
-import useCurrentPrice from "../hooks/useCurrentPrice.ts";
-import {Box, CircularProgress, Typography} from "@mui/material";
+import { usePriceStore } from "../store/usePriceStore";
+import useCurrentPrice from "../hooks/useCurrentPrice";
+import Loading from "./Loading";
+import ErrorDisplay from "./ErrorDisplay.tsx";
 
 const CryptoDataWrapper = ({ children }: { children: React.ReactNode }) => {
     const { coin } = usePriceStore();
-    const { data, loading } = useCurrentPrice(coin);
-
+    const { data, loading  , error} = useCurrentPrice(coin);
+    console.log(error)
     if (loading) {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-                <CircularProgress />
-            </Box>
-        );
+        return <Loading/>;
     }
 
-    if (!coin || !data) {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-                <Typography variant="h6" color="textSecondary">
-                    {!coin ? 'Please select a cryptocurrency' : 'Error loading data'}
-                </Typography>
-            </Box>
-        );
-    }
+    if (!coin) return <ErrorDisplay message="Please select a cryptocurrency" />;
+
+    if (error) return <ErrorDisplay message={error} />;
+
+    if (!data) return <ErrorDisplay message={`No data available for ${coin}`} />;
 
     return <>{children}</>;
 };

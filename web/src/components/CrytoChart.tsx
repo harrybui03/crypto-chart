@@ -7,15 +7,22 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { usePriceStore } from "../store/usePriceStore";
-import { CircularProgress, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import useFetchPrice from "../hooks/useFetchPrice";
-import CustomTooltip from "./CustomTooltip.tsx";
+import CustomTooltip from "./CustomTooltip/CustomTooltip.tsx";
+import Loading from "./Loading.tsx";
+import {formatDate} from "../utils/utils.ts";
+import ErrorDisplay from "./ErrorDisplay.tsx";
 
 const CryptoChart = () => {
   const { coin, range } = usePriceStore();
-  const { data, loading } = useFetchPrice(coin, range);
+  const { data, loading, error } = useFetchPrice(coin, range);
 
-  if (loading) return <CircularProgress />;
+  if (loading) {
+    return <Loading/>;
+  }
+
+  if (error) return <ErrorDisplay />;
 
   return (
     <Box>
@@ -26,7 +33,7 @@ const CryptoChart = () => {
         <LineChart data={data}>
           <XAxis
             dataKey="time"
-            tickFormatter={(tick) => new Date(tick).toLocaleDateString()}
+            tickFormatter={(tick) => formatDate(tick)}
           />
           <YAxis />
           <Tooltip content={<CustomTooltip />} />

@@ -3,14 +3,15 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-interface PriceData {
+interface Price {
     symbol: string;
     price: number;
 }
 
 const useCurrentPrice = (coin: string) => {
-    const [data, setData] = useState<PriceData | null>(null);
+    const [data, setData] = useState<Price | null>(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,10 +19,15 @@ const useCurrentPrice = (coin: string) => {
 
             setLoading(true);
             try {
-                const response = await axios.get<PriceData>(`${API_URL}/price/${coin}`);
+                const response = await axios.get<Price>(`${API_URL}/price/${coin}`);
                 setData(response.data);
+                setError(null)
             } catch (error) {
-                console.error("Error fetching data", error);
+                if (axios.isAxiosError(error) && error.response?.data?.error) {
+                    setError(error.response.data.error);
+                } else {
+                    setError("Failed to fetch price data");
+                }
                 setData(null);
             } finally {
                 setLoading(false);
@@ -31,7 +37,7 @@ const useCurrentPrice = (coin: string) => {
         fetchData();
     }, [coin]);
 
-    return { data, loading };
+    return { data, loading , error };
 }
 
 export default useCurrentPrice;

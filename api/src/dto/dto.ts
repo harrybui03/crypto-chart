@@ -1,13 +1,13 @@
-export interface CurrentPrice {
+export interface Price {
     price: number;
     symbol: string;
 }
 
 export interface HistoryChart {
-    data: HistoryChartData[];
+    data: HistoryChartElement[];
 }
 
-export interface HistoryChartData {
+export interface HistoryChartElement {
     price: number;
     time: number;
 }
