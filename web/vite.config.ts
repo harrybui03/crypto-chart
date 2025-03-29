@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react()],
   preview: {
-    allowedHosts: ['all']
+    allowedHosts: ['https://crypto-chart-nna7.onrender.com/']
   }
 })
